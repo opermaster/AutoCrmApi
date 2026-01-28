@@ -14,8 +14,9 @@
     }
     public class UserDto
     {
+        public int? Id { get; set; } = null!;
         public string Login { get; set; } = null!;
-        public string Password { get; set; } = null!;
+        public string? Password { get; set; } = null!;
         public UserRole Role { get; set; }
         public User ToUser() {
             return new User() {

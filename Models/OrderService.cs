@@ -16,5 +16,12 @@
         public bool Done { get; set; }
 
     }
+    public class OrderServicesDto
+    {
+        public int OrderId { get; set; }
+        public List<int> ServiceIds { get; set; } = new();
+        public List<int> MasterIds { get; set; } = new();
+
+    }
 
 }

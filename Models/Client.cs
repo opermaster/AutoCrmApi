@@ -10,5 +10,17 @@
 
         public ICollection<Auto> Autos { get; set; } = new List<Auto>();
     }
-
+    public class ClientDto
+    {
+        public string FirstName { get; set; } = null!;
+        public string LastName { get; set; } = null!;
+        public string Phone { get; set; } = null!;
+        public Client ToClient() {
+            return new Client() {
+                FirstName = FirstName,
+                LastName = LastName,
+                Phone = Phone,
+            };
+        }
+    }
 }

@@ -1,8 +1,9 @@
+using AutoCrmApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using AutoCrmApi.Models;
+using System.Text.Json.Serialization;
 
 namespace AutoCrmApi
 {
@@ -10,7 +11,12 @@ namespace AutoCrmApi
     {
         public static void Main(string[] args) {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(
+                    new JsonStringEnumConverter()
+                );
+            });
             var connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
             builder.Services.AddCors(options => {
                 options.AddPolicy("AllowFrontend",
@@ -21,6 +27,7 @@ namespace AutoCrmApi
                             .AllowAnyMethod();
                     });
             });
+
             builder.Services.AddDbContext<DatabaseContext>(options =>
                 options.UseNpgsql(connectionString));
             builder.Services.AddAuthentication(options => {
@@ -59,8 +66,12 @@ namespace AutoCrmApi
             });
             var app = builder.Build();
 
-            app.MapGet("/", () => "Hello World!");
+            app.UseRouting();
+            app.UseCors("AllowFrontend");
+            app.UseAuthentication();
+            app.UseAuthorization();
 
+            app.MapControllers();
             app.Run();
         }
     }

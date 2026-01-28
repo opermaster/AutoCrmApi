@@ -12,5 +12,12 @@
 
         public int Quantity { get; set; }
     }
+    public class OrderPartsDto
+    {
+        public int OrderId { get; set; }
+        public List<int> PartIds { get; set; } = new();
+        public List<int> Quantities { get; set; } = new();
+        
 
+    }
 }
