@@ -13,6 +13,7 @@ namespace AutoCrmApi.Controllers
             _context = context;
         }
         [Authorize(Roles = "Manager,Admin")]
+        [HttpGet("all/services")]
         public ActionResult<List<ServiceDto>> GetServices() {
             return _context.Services.Select(p => new ServiceDto {
                 Id = p.Id,
@@ -22,7 +23,7 @@ namespace AutoCrmApi.Controllers
             }).ToList();
         }
         [Authorize(Roles = "Admin")]
-        [HttpPost]
+        [HttpPost("new-service")]
         public ActionResult CreateService(ServiceDto _service) {
             Service service = _service.ToService();
             _context.Services.Add(service);
@@ -30,7 +31,7 @@ namespace AutoCrmApi.Controllers
             return Created(nameof(CreateService), new { id = service.Id, });
         }
         [Authorize(Roles = "Admin")]
-        [HttpPut]
+        [HttpPut("update-service")]
         public ActionResult UpdateService(ServiceDto _service) {
             if (_service.Id is not null) {
                 Service? service = _context.Services.FirstOrDefault(p => p.Id == _service.Id);
@@ -47,7 +48,7 @@ namespace AutoCrmApi.Controllers
             else return Conflict("Id of service wasnt provided!");
         }
         [Authorize(Roles = "Admin")]
-        [HttpDelete("{id}")]
+        [HttpDelete("/delete-service/{id}")]
         public ActionResult DeleteService(int id) {
             Service? service = _context.Services.Find(id);
             if (service is not null) {

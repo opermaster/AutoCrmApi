@@ -16,7 +16,7 @@ namespace AutoCrmApi.Controllers
             _context = context;
         }
         [Authorize(Roles = "Manager")]
-        [HttpPost]
+        [HttpPost("new_client")]
         public ActionResult CreateClient(ClientDto _client) {
             bool exist = _context.Clients.Any(u => u.Phone == _client.Phone);
             if (exist) return Conflict("User with this phone number already exists");

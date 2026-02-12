@@ -15,7 +15,7 @@ namespace AutoCrmApi.Controllers
             _context = context;
         }
         [Authorize(Roles = "Manager")]
-        [HttpPost]
+        [HttpPost("new_auto")]
         public ActionResult CreateAuto(AutoDto _auto) {
             if (_context.Autos.Any(a => a.Number == _auto.Number)) return Conflict("Auto with this number already exist!");
             Auto auto = _auto.ToAuto();

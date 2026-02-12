@@ -14,7 +14,7 @@ namespace AutoCrmApi.Controllers
             _context = context;
         }
         [Authorize(Roles = "Manager,Admin")]
-        [HttpGet]
+        [HttpGet("all_parts")]
         public ActionResult<List<PartDto>> GetParts() {
             return _context.Parts.Select(p=> new PartDto {
                 Id = p.Id,
@@ -23,7 +23,7 @@ namespace AutoCrmApi.Controllers
             }).ToList();
         }
         [Authorize(Roles = "Admin")]
-        [HttpPost]
+        [HttpPost("new-part")]
         public ActionResult CreatePart(PartDto _part) {
             Part part = _part.ToPart();
             _context.Parts.Add(part);
@@ -31,7 +31,7 @@ namespace AutoCrmApi.Controllers
             return Created(nameof(CreatePart), new { id = part.Id, });
         }
         [Authorize(Roles = "Admin")]
-        [HttpPut]
+        [HttpPut("update-part")]
         public ActionResult UpdatePart(PartDto _part) {
             if (_part.Id is not null) {
                 Part? part = _context.Parts.FirstOrDefault(p =>p.Id ==_part.Id);
@@ -46,7 +46,7 @@ namespace AutoCrmApi.Controllers
             else return Conflict("Id of part wasnt provided!");
         }
         [Authorize(Roles = "Admin")]
-        [HttpDelete("{id}")]
+        [HttpDelete("/by-partid/{id}")]
         public ActionResult DeletePart(int id) {
             Part? part = _context.Parts.Find(id);
             if (part is not null) {

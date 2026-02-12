@@ -15,7 +15,7 @@ namespace AutoCrmApi.Controllers
             _context = context;
         }
         [Authorize(Roles = "Master,Admin")]
-        [HttpGet]
+        [HttpGet("inner")]
         public ActionResult<List<OrderResponseDto>> GetOrders() {
             var userId = int.Parse(
                 User.FindFirst(ClaimTypes.NameIdentifier)!.Value
@@ -43,7 +43,7 @@ namespace AutoCrmApi.Controllers
             return Ok(result);
         }
         [Authorize(Roles = "Admin")]
-        [HttpDelete("{id}")]
+        [HttpDelete("/by-id/{id}")]
         public ActionResult DeleteOrder(int id) {
             Order? order = _context.Orders.FirstOrDefault(o => o.Id == id);
             if(order is not null) {
@@ -54,7 +54,7 @@ namespace AutoCrmApi.Controllers
             return BadRequest();
         }
         [Authorize(Roles = "Manager")]
-        [HttpPost]
+        [HttpPost("new_order")]
         public ActionResult CreateOrder(OrderDto _order) {
             Auto? auto = _context.Autos.FirstOrDefault(a => a.Number == _order.Number);
             if (auto is null) return BadRequest("Car with this number does not exist!");
@@ -105,7 +105,7 @@ namespace AutoCrmApi.Controllers
             return Ok();
         }
         [Authorize(Roles = "Master")]
-        [HttpPut]
+        [HttpPut("services-update")]
         public ActionResult UpdateServices(OrderUpdateDto dto) {
             Order? order = _context.Orders.FirstOrDefault(o => o.Id == dto.OrderId);
             if (order is null) return BadRequest("Order with this Id does not exist!");
